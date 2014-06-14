@@ -598,9 +598,9 @@ class extendedquiz_attempt {
         if ($vars) {
             foreach ($vars as $var) {
                 // If this attempt doesn't have yet a value
-                if (!$values = $DB->get_field('extendedquiz_val', 'varvalues', array('attemptid' => $this->get_attemptid(), 'extendedquizvarid' => $var->id)) ) {
+                if (!$values = $DB->get_field('extendedquiz_val', 'varvalues', array('attemptid' => $this->get_uniqueid(), 'extendedquizvarid' => $var->id)) ) {
                     // Add a new random value
-                    $val->attemptid = $this->get_attemptid();
+                    $val->attemptid = $this->get_uniqueid();
                     $val->extendedquizvarid = $var->id;
                     $val->varvalues = programmedresp_serialize(programmedresp_get_random_value($var));
                     if (!$DB->insert_record('extendedquiz_val', $val)) {
