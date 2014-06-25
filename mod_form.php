@@ -81,15 +81,16 @@ class mod_extendedquiz_mod_form extends moodleform_mod {
         // Adding the standard "intro" and "introformat" fields
         $this->add_intro_editor();
         
-//-------------------------------------guided quiz--------------------------------------------------
+//-------------------------------------Extended quiz--------------------------------------------------
 		
         // Adding wwwroot accessible des de script.js 
         echo "<script type=\"text/javascript\">//<![CDATA[\n".
         		"var wwwroot = '".$CFG->wwwroot."';\n".
         		"//]]></script>\n";
-		
-        //including programmedresp dependencies
+	
+        //including JavaScript programmedresp dependencies
         $PAGE->requires->js('/question/type/programmedresp/script.js');
+        //including programmedresp dependencies
         require_once($CFG->dirroot.'/question/type/programmedresp/lib.php');
         require_once($CFG->dirroot.'/question/type/programmedresp/programmedresp_output_ajax.class.php');
         
@@ -122,13 +123,14 @@ class mod_extendedquiz_mod_form extends moodleform_mod {
         if (!empty($this->_instance)){
         	
                 $intro = $DB->get_field('extendedquiz', 'intro', array('id' => $this->_instance));
-        	//skip the concatenated var option
+                // Has the guided quiz concatenated vars
+        	$concatvars = $DB->get_records_select('qtype_programmedresp_conc', "origin = 'quiz' AND instanceid = '$this->_instance'");
         	$outputmanager = new prgrammedresp_output($mform);
-        	$outputmanager->display_vars($intro,false,false,false);
+        	$outputmanager->display_vars($intro, false, false, $concatvars);
         }
         
         $mform->addElement('html', '</div>');
-        //enf guided quiz own settings
+        //enf Extended quiz own settings
         
         $mform->addElement('header', 'timing', get_string('timing', 'quiz'));
 
@@ -649,5 +651,30 @@ class mod_extendedquiz_mod_form extends moodleform_mod {
         $errors = extendedquiz_access_manager::validate_settings_form_fields($errors, $data, $files, $this);
 
         return $errors;
+    }
+    
+    // guidedquiz mod
+    function set_data($default_values) {
+        global $DB;
+        debugging("instance id = ".$this->_instance);
+    	if (!empty($this->_instance)) {
+            
+    		// The vars different attributes
+    		$varfields = programmedresp_get_var_fields();
+    		
+            $vars = $DB->get_records('extendedquiz_var', array('quizid' => $this->_instance));
+            if ($vars) {
+                foreach ($vars as $var) {
+	                foreach ($varfields as $varfield => $fielddesc) {
+	                    $fieldname = 'var_'.$varfield.'_'.$var->varname;
+	                    $default_values->{$fieldname} = $var->{$varfield};
+	                }
+                }
+            }
+        }
+    	
+    	parent::set_data($default_values);
+    	
+    	
     }
 }
