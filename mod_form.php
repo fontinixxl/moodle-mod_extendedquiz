@@ -656,7 +656,6 @@ class mod_extendedquiz_mod_form extends moodleform_mod {
     // guidedquiz mod
     function set_data($default_values) {
         global $DB;
-        debugging("instance id = ".$this->_instance);
     	if (!empty($this->_instance)) {
             
     		// The vars different attributes
