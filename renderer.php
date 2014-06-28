@@ -48,11 +48,16 @@ class mod_extendedquiz_renderer extends plugin_renderer_base {
      */
     public function review_page(extendedquiz_attempt $attemptobj, $slots, $page, $showall,
                                 $lastpage, mod_extendedquiz_display_options $displayoptions,
-                                $summarydata) {
+                                $summarydata, $questiontext = null) {
 
         $output = '';
         $output .= $this->header();
         $output .= $this->review_summary_table($summarydata, $page);
+        //extendedquiz mod
+        if(isset($questiontext)){
+            $output .= $this->quiz_intro_vars($questiontext);
+        }
+        //extendedquiz mod end
         $output .= $this->review_form($page, $showall, $displayoptions,
                 $this->questions($attemptobj, true, $slots, $page, $showall, $displayoptions),
                 $attemptobj);

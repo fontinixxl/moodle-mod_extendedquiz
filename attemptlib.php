@@ -582,9 +582,6 @@ class extendedquiz_attempt {
     }
     
     //Extendedquiz mod
-    /**
-     * 
-     */
     public function assign_random_values() {
         global $CFG, $DB;
         require_once($CFG->dirroot.'/question/type/programmedresp/lib.php');         //no se si es correcte declarar-ho aquí ?¿¿?

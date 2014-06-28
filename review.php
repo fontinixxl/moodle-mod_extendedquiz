@@ -254,4 +254,7 @@ $navbc = $attemptobj->get_navigation_panel($output, 'extendedquiz_review_nav_pan
 $regions = $PAGE->blocks->get_regions();
 $PAGE->blocks->add_fake_block($navbc, reset($regions));
 
-echo $output->review_page($attemptobj, $slots, $page, $showall, $lastpage, $options, $summarydata);
+//Extendedquiz mod 
+$attemptobj->assign_random_values();
+//Extendedquiz mod end
+echo $output->review_page($attemptobj, $slots, $page, $showall, $lastpage, $options, $summarydata, $attemptobj->get_questiontext());

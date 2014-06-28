@@ -130,4 +130,4 @@ if ($attemptobj->is_last_page($page)) {
 //Extendedquiz mod 
 $attemptobj->assign_random_values();
 //Extendedquiz mod end
-echo $output->attempt_page($attemptobj, $page, $accessmanager, $messages, $slots, $id, $nextpage,$attemptobj->get_questiontext());
+echo $output->attempt_page($attemptobj, $page, $accessmanager, $messages, $slots, $id, $nextpage, $attemptobj->get_questiontext());
