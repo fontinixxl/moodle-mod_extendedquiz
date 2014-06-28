@@ -583,20 +583,21 @@ class extendedquiz_attempt {
     
     //Extendedquiz mod
     public function assign_random_values() {
-        global $CFG, $DB;
-        require_once($CFG->dirroot.'/question/type/programmedresp/lib.php');         //no se si es correcte declarar-ho aquí ?¿¿?
         
-        //print_error($this->get_quiz()->intro);
+        global $CFG, $DB;
+        require_once($CFG->dirroot.'/question/type/programmedresp/lib.php');        
+        //debugging("Extendedquiz::assign_random_values");
+        
         $formatoptions->noclean = true;
-        $questiontext = format_text($this->get_quiz()->intro, FORMAT_MOODLE, $formatoptions);   //?¿?¿
+        $questiontext = format_text($this->get_quiz()->intro, FORMAT_MOODLE, $formatoptions);   
         
         $vars = $DB->get_records('extendedquiz_var', array('quizid' => $this->get_quizid()));
-        //print_error($vars);
         if ($vars) {
             foreach ($vars as $var) {
                 // If this attempt doesn't have yet a value
                 if (!$values = $DB->get_field('extendedquiz_val', 'varvalues', array('attemptid' => $this->get_uniqueid(), 'extendedquizvarid' => $var->id)) ) {
                     // Add a new random value
+                    debugging("Extendedquiz::assign_random_values");
                     $val->attemptid = $this->get_uniqueid();
                     $val->extendedquizvarid = $var->id;
                     $val->varvalues = programmedresp_serialize(programmedresp_get_random_value($var));

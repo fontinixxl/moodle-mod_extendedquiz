@@ -43,7 +43,7 @@ foreach ($args as $key => $arg) {
 	}
 }
 
-// Guidedquiz vars
+// Extendedquiz vars
 $extendedquizvars = $DB->get_records('extendedquiz_var', array('quizid' => $quizid));
 if (!$extendedquizvars) {
 	print_error('errornoquizvars', 'extendedquiz');
@@ -67,9 +67,6 @@ $toform->quizid = $quizid;
 $toform->questionid = $questionid;
 
 $url = $CFG->wwwroot.'/mod/extendedquiz/assignvars.php';
-
-//$url = new moodle_url($CFG->wwwroot.'/mod/extendedquiz/assignvars.php', array('quizid' => $quizid, 'questionid' => $questionid));
-
 $customdata['extendedquizvars'] = $options;
 $customdata['args'] = $args;
 $form = new extendedquiz_assignvars_form($url, $customdata);
