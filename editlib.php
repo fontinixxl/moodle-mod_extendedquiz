@@ -617,10 +617,10 @@ function extendedquiz_print_question_list($quiz, $pageurl, $allowdelete, $reorde
             </div><?php
                 if (!in_array($question->qtype, array('description', 'missingtype')) && !$reordertool) {
                     ?>
-<div class="points">
+<div class="points" id="guided">
 <form method="post" action="edit.php" class="quizsavegradesform"><div>
     <fieldset class="invisiblefieldset" style="display: block;">
-    <label for="<?php echo "inputq$question->id" ?>"><?php echo $strmaxmark; ?></label>:<br />
+    <label for="<?php echo "inputq$question->id" ?>"><?php echo "Grade  Attempts  Penalty"; ?></label><br />
     <input type="hidden" name="sesskey" value="<?php echo sesskey() ?>" />
     <?php echo html_writer::input_hidden_params($pageurl); ?>
     <input type="hidden" name="savechanges" value="save" />
@@ -630,8 +630,21 @@ function extendedquiz_print_question_list($quiz, $pageurl, $allowdelete, $reorde
                             '" size="' . ($quiz->decimalpoints + 2) .
                             '" value="' . (0 + $quiz->grades[$qnum]) .
                             '" tabindex="' . ($lastindex + $qno) . '" />';
+                            echo '&nbsp';
                     ?>
-        <input type="submit" class="pointssubmitbutton" value="<?php echo $strsave; ?>" />
+    
+    <select name="na" tabindex="5">
+        
+    </select>
+    <?php echo '&nbsp &nbsp ';
+    echo '<input type="text" name="g' . $question->id .
+            '" id="inputq' . $question->id .
+            '" size="' . ($quiz->decimalpoints + 2) .
+            '" value="' . (0 + $quiz->grades[$qnum]) .
+            '" tabindex="' . ($lastindex + $qno) . '" />';
+    
+    ?>
+    
     </fieldset>
                     <?php
                     if ($question->qtype == 'random') {
@@ -821,7 +834,6 @@ function extendedquiz_print_singlequestion($question, $returnurl, $quiz) {
     echo ' ' . question_bank::get_qtype_name($question->qtype) . '</span>';
     echo '<span class="questionpreview">' .
             extendedquiz_question_preview_button($quiz, $question, true) . '</span>';
-    //echo "</div>\n";
     //extendedquiz
     if($question->qtype == 'programmedresp'){
         
@@ -1044,7 +1056,8 @@ function extendedquiz_question_tostring($question, $showicon = false,
     if ($showquestiontext) {
         $questiontext = question_utils::to_plain_text($question->questiontext,
                 $question->questiontextformat, array('noclean' => true, 'para' => false));
-        $questiontext = shorten_text($questiontext, 200);
+        //$questiontext = shorten_text($questiontext, 200);
+        $questiontext = shorten_text($questiontext, 20);
         $result .= '<span class="questiontext">';
         if (!empty($questiontext)) {
             $result .= $questiontext;

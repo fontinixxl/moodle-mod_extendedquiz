@@ -260,6 +260,9 @@ table#categoryquestions {width: 100%;overflow: hidden;table-layout: fixed;}
 #page-mod-extendedquiz-edit div.question div.content div.points{top:0.5em;border-left:0.4em solid #FFF;width:8.5em;padding:0.2em;line-height:1em;max-width:30%;position:absolute;right:60px;-webkit-border-radius:0.2em;-webkit-border-radius-bottomleft:0;-webkit-border-radius-topleft:0;border-radius:0.2em;border-radius-bottomleft:0;border-radius-topleft:0;z-index:900;display:block;margin:0;background-color:#ddf;}
 #page-mod-extendedquiz-edit div.question div.content div.points input{width:2em;padding:0;}
 #page-mod-extendedquiz-edit div.question div.content div.points input.pointssubmitbutton{width:auto;}
+//EXTENDEDQUIZ OWN 
+#page-mod-extendedquiz-edit div.question div.content div#guided.points  {width:initial;} 
+//END 
 #page-mod-extendedquiz-edit div.question div.content div.qorder {line-height:1em;max-width:30%;position:absolute;right:50px;-webkit-border-radius:0.2em;-webkit-border-radius-bottomleft:0;-webkit-border-radius-topleft:0;border-radius:0.2em;border-radius-bottomleft:0;border-radius-topleft:0;z-index:900;display:block;margin:0;background-color:#ddf;}
 #page-mod-extendedquiz-edit div.question div.content .editicon {width:15px;}
 #page-mod-extendedquiz-edit div.question div.content .singlequestion .questionname,
