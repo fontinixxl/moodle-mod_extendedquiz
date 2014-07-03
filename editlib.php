@@ -1383,3 +1383,128 @@ function extendedquiz_print_status_bar($quiz) {
 
     echo html_writer::tag('div', implode(' | ', $bits), array('class' => 'statusbar'));
 }
+
+/**
+ * Common setup for all pages for editing questions.
+ * @param string $baseurl the name of the script calling this funciton. For examle 'qusetion/edit.php'.
+ * @param string $edittab code for this edit tab
+ * @param bool $requirecmid require cmid? default false
+ * @param bool $requirecourseid require courseid, if cmid is not given? default true
+ * @return array $thispageurl, $contexts, $cmid, $cm, $module, $pagevars
+ */
+function extendedquiz_q_edit_setup($edittab, $baseurl, $requirecmid = false, $requirecourseid = true) {
+    global $DB, $PAGE;
+
+    $thispageurl = new moodle_url($baseurl);
+    $thispageurl->remove_all_params(); // We are going to explicity add back everything important - this avoids unwanted params from being retained.
+    
+    if ($requirecmid){
+        $cmid =required_param('cmid', PARAM_INT);
+    } else {
+        $cmid = optional_param('cmid', 0, PARAM_INT);
+    }
+    if ($cmid){
+        list($module, $cm) = get_module_from_cmid($cmid);
+        $courseid = $cm->course;
+        $thispageurl->params(compact('cmid'));
+        require_login($courseid, false, $cm);
+        $thiscontext = context_module::instance($cmid);
+    } else {
+        $module = null;
+        $cm = null;
+        if ($requirecourseid){
+            $courseid  = required_param('courseid', PARAM_INT);
+        } else {
+            $courseid  = optional_param('courseid', 0, PARAM_INT);
+        }
+        if ($courseid){
+            $thispageurl->params(compact('courseid'));
+            require_login($courseid, false);
+            $thiscontext = context_course::instance($courseid);
+        } else {
+            $thiscontext = null;
+        }
+    }
+
+    if ($thiscontext){
+        $contexts = new question_edit_contexts($thiscontext);
+        $contexts->require_one_edit_tab_cap($edittab);
+
+    } else {
+        $contexts = null;
+    }
+
+    $PAGE->set_pagelayout('admin');
+
+    $pagevars['qpage'] = optional_param('qpage', -1, PARAM_INT);
+
+    //pass 'cat' from page to page and when 'category' comes from a drop down menu
+    //then we also reset the qpage so we go to page 1 of
+    //a new cat.
+    if (optional_param('savechanges', false, PARAM_BOOL)) {
+        $pagevars['cat'] = 0;
+        $pagevars['qpage'] = 0;
+    } else {
+        $pagevars['cat'] = optional_param('cat', 0, PARAM_SEQUENCE); // if empty will be set up later
+        if ($category = optional_param('category', 0, PARAM_SEQUENCE)) {
+            if ($pagevars['cat'] != $category) { // is this a move to a new category?
+                $pagevars['cat'] = $category;
+                $pagevars['qpage'] = 0;
+            }
+        }
+    }
+    if ($pagevars['cat']){
+        $thispageurl->param('cat', $pagevars['cat']);
+    }
+    if (strpos($baseurl, '/question/') === 0) {
+        navigation_node::override_active_url($thispageurl);
+    }
+
+    if ($pagevars['qpage'] > -1) {
+        $thispageurl->param('qpage', $pagevars['qpage']);
+    } else {
+        $pagevars['qpage'] = 0;
+    }
+
+    $pagevars['qperpage'] = question_get_display_preference(
+            'qperpage', DEFAULT_QUESTIONS_PER_PAGE, PARAM_INT, $thispageurl);
+
+    for ($i = 1; $i <= question_bank_view::MAX_SORTS; $i++) {
+        $param = 'qbs' . $i;
+        if (!$sort = optional_param($param, '', PARAM_ALPHAEXT)) {
+            break;
+        }
+        $thispageurl->param($param, $sort);
+    }
+
+    $defaultcategory = question_make_default_categories($contexts->all());
+
+    $contextlistarr = array();
+    foreach ($contexts->having_one_edit_tab_cap($edittab) as $context){
+        $contextlistarr[] = "'$context->id'";
+    }
+    $contextlist = join($contextlistarr, ' ,');
+    if (!empty($pagevars['cat'])){
+        $catparts = explode(',', $pagevars['cat']);
+        if (!$catparts[0] || (false !== array_search($catparts[1], $contextlistarr)) ||
+                !$DB->count_records_select("question_categories", "id = ? AND contextid = ?", array($catparts[0], $catparts[1]))) {
+            print_error('invalidcategory', 'question');
+        }
+    } else {
+        $category = $defaultcategory;
+        $pagevars['cat'] = "$category->id,$category->contextid";
+    }
+
+    // Display options.
+    $pagevars['recurse']    = question_get_display_preference('recurse',    1, PARAM_BOOL, $thispageurl);
+    $pagevars['showhidden'] = question_get_display_preference('showhidden', 0, PARAM_BOOL, $thispageurl);
+    $pagevars['qbshowtext'] = question_get_display_preference('qbshowtext', 0, PARAM_BOOL, $thispageurl);
+
+    // Category list page.
+    $pagevars['cpage'] = optional_param('cpage', 1, PARAM_INT);
+    if ($pagevars['cpage'] != 1){
+        $thispageurl->param('cpage', $pagevars['cpage']);
+    }
+
+    return array($thispageurl, $contexts, $cmid, $cm, $module, $pagevars);
+}

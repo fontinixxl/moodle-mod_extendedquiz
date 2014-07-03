@@ -119,7 +119,7 @@ $scrollpos = optional_param('scrollpos', '', PARAM_INT);
 //debugging(print_r($_POST));
 //die();
 list($thispageurl, $contexts, $cmid, $cm, $quiz, $pagevars) =
-        question_edit_setup('editq', '/mod/extendedquiz/edit.php', true);
+        extendedquiz_q_edit_setup('editq', '/mod/extendedquiz/edit.php', true);
 $quiz->questions = extendedquiz_clean_layout($quiz->questions);
 
 $defaultcategoryobj = question_make_default_categories($contexts->all());
