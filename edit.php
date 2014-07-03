@@ -116,7 +116,8 @@ function module_specific_controls($totalnumber, $recurse, $category, $cmid, $cmo
 $quiz_reordertool = optional_param('reordertool', -1, PARAM_BOOL);
 $quiz_qbanktool = optional_param('qbanktool', -1, PARAM_BOOL);
 $scrollpos = optional_param('scrollpos', '', PARAM_INT);
-
+//debugging(print_r($_POST));
+//die();
 list($thispageurl, $contexts, $cmid, $cm, $quiz, $pagevars) =
         question_edit_setup('editq', '/mod/extendedquiz/edit.php', true);
 $quiz->questions = extendedquiz_clean_layout($quiz->questions);
@@ -161,8 +162,12 @@ add_to_log($cm->course, 'extendedquiz', 'editquestions',
 // You need mod/extendedquiz:manage in addition to question capabilities to access this page.
 require_capability('mod/extendedquiz:manage', $contexts->lowest());
 
-if (empty($quiz->grades)) {
-    $quiz->grades = extendedquiz_get_all_question_grades($quiz);
+if (empty($quiz->grades)) {     // Construct an array to hold all the grades.
+    //$quiz->grades = extendedquiz_get_all_question_grades($quiz);
+    $questionsdata = extendedquiz_get_all_question_grades($quiz);
+    $quiz->grades = $questionsdata->grades;
+    $quiz->penalties = $questionsdata->penalties;
+    $quiz->nattempts = $questionsdata->nattempts;
 }
 
 // Process commands ============================================================
@@ -301,6 +306,7 @@ if (optional_param('quizdeleteselected', false, PARAM_BOOL) &&
 }
 
 if (optional_param('savechanges', false, PARAM_BOOL) && confirm_sesskey()) {
+    //debugging("detect savechanges param");
     $deletepreviews = false;
     $recomputesummarks = false;
 
@@ -312,13 +318,17 @@ if (optional_param('savechanges', false, PARAM_BOOL) && confirm_sesskey()) {
     if (!$moveselectedonpage) {
         $moveselectedonpage = optional_param('moveselectedonpagebottom', 0, PARAM_INT);
     }
-
+    unset($quiz->grades);
     foreach ($rawdata as $key => $value) {
         if (preg_match('!^g([0-9]+)$!', $key, $matches)) {
             // Parse input for question -> grades.
+            //debugging('MATCHES: 0-> '.$matches[0].' 1-> '.$matches[1]);
             $questionid = $matches[1];
             $quiz->grades[$questionid] = unformat_float($value);
-            extendedquiz_update_question_instance($quiz->grades[$questionid], $questionid, $quiz);
+            //debugging(optional_param('p'.$questionid, 0, PARAM_NUMBER));
+            $quiz->penalties[$questionid] = optional_param('p'.$questionid, 0, PARAM_NUMBER);
+            $quiz->nattempts[$questionid] = optional_param('na'.$questionid, 1, PARAM_INT);
+            extendedquiz_update_question_instance($quiz->grades[$questionid], $questionid, $quiz, $quiz->penalties[$questionid], $quiz->nattempts[$questionid] );
             $deletepreviews = true;
             $recomputesummarks = true;
 
@@ -482,8 +492,9 @@ echo '</div>';
 echo '</div>';
 
 echo '</div></div>';
-
+    
 echo '<div class="quizcontents ' . $quizcontentsclass . '" id="quizcontentsblock">';
+    
 if ($quiz->shufflequestions) {
     $repaginatingdisabledhtml = 'disabled="disabled"';
     $repaginatingdisabled = true;
@@ -508,8 +519,8 @@ if ($quiz_reordertool) {
 }
 extendedquiz_print_status_bar($quiz);
 
-$tabindex = 0;
-extendedquiz_print_grading_form($quiz, $thispageurl, $tabindex);
+$tabindex = 1;
+//extendedquiz_print_grading_form($quiz, $thispageurl, $tabindex);
 
 $notifystrings = array();
 if ($quizhasattempts) {
@@ -558,13 +569,34 @@ if ($quiz_reordertool) {
     echo '<div class="reorder">';
 } else {
     echo '<div class="editq">';
+    //Editing Quiz
+    echo '<form method="post" action="edit.php" class="quizsavegradesform"><div>';
+    echo "<input type=\"hidden\" name=\"sesskey\" value=\"" . sesskey() . "\" />";
+    echo html_writer::input_hidden_params($thispageurl);
 }
 
 extendedquiz_print_question_list($quiz, $thispageurl, true, $quiz_reordertool, $quiz_qbanktool,
         $quizhasattempts, $defaultcategoryobj, $canaddquestion, $canaddrandom);
-echo '</div>';
 
-// Close <div class="quizcontents">.
+if(!$quiz_reordertool){
+    
+    echo '<fieldset class="invisiblefieldset" style="display: block;">';
+    $a = '<input type="text" id="inputmaxgrade" name="maxgrade" size="' .
+            ($quiz->decimalpoints + 2) . '" tabindex="' . 10
+         . '" value="' . extendedquiz_format_grade($quiz, $quiz->grade) . '" />';
+    echo '<div class="saveallstyle">';
+    echo '<label for="inputmaxgrade">' . get_string('maximumgradex', '', $a) . "</label>";
+    echo '</div>';
+    echo '<input type="hidden" name="savechanges" value="save" />';
+    echo '<div class="saveallbutn">';
+    echo '<input type="submit" value="' . get_string('savechanges') . '" />';
+    echo '</div>';
+    echo '</fieldset>';
+ 
+}
+echo '</div></form>';
+echo '</div>';
+//div content
 echo '</div>';
 
 if (!$quiz_reordertool && $canaddrandom) {

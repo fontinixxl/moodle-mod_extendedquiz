@@ -284,7 +284,7 @@ function extendedquiz_save_new_layout($quiz) {
  * @param int $questionid  The id of the question
  * @param int $quizid  The id of the quiz to update / add the instances for.
  */
-function extendedquiz_update_question_instance($grade, $questionid, $quiz) {
+function extendedquiz_update_question_instance($grade, $questionid, $quiz, $penalty = false, $nattempts = false ) {
     global $DB;
     $instance = $DB->get_record('extendedquiz_q_instances', array('quiz' => $quiz->id,
             'question' => $questionid));
@@ -293,13 +293,16 @@ function extendedquiz_update_question_instance($grade, $questionid, $quiz) {
     if (!$instance || !$slot) {
         throw new coding_exception('Attempt to change the grade of a quesion not in the quiz.');
     }
-
-    if (abs($grade - $instance->grade) < 1e-7) {
-        // Grade has not changed. Nothing to do.
-        return;
-    }
-
+    
     $instance->grade = $grade;
+    // guidedquiz mod end
+    if ($penalty) {
+        $instance->penalty = $penalty;
+    }
+    if ($nattempts) {
+        $instance->nattempts = $nattempts;
+    }
+    // guidedquiz mod end
     $DB->update_record('extendedquiz_q_instances', $instance);
     question_engine::set_max_mark_in_attempts(new qubaids_for_extendedquiz($quiz->id),
             $slot, $grade);
@@ -617,47 +620,51 @@ function extendedquiz_print_question_list($quiz, $pageurl, $allowdelete, $reorde
             </div><?php
                 if (!in_array($question->qtype, array('description', 'missingtype')) && !$reordertool) {
                     ?>
-<div class="points" id="guided">
-<form method="post" action="edit.php" class="quizsavegradesform"><div>
-    <fieldset class="invisiblefieldset" style="display: block;">
-    <label for="<?php echo "inputq$question->id" ?>"><?php echo "Grade  Attempts  Penalty"; ?></label><br />
-    <input type="hidden" name="sesskey" value="<?php echo sesskey() ?>" />
-    <?php echo html_writer::input_hidden_params($pageurl); ?>
-    <input type="hidden" name="savechanges" value="save" />
-                    <?php
-                    echo '<input type="text" name="g' . $question->id .
-                            '" id="inputq' . $question->id .
-                            '" size="' . ($quiz->decimalpoints + 2) .
-                            '" value="' . (0 + $quiz->grades[$qnum]) .
-                            '" tabindex="' . ($lastindex + $qno) . '" />';
-                            echo '&nbsp';
-                    ?>
-    
-    <select name="na" tabindex="5">
+<div class="points">
+    <div class="guided">
+        <fieldset class="invisiblefieldset" style="display: block;">
+        <label for="<?php echo "inputq$question->id" ?>"><?php echo "Grade  Attempts  Penalty"; ?></label><br />
+        <?php
+        echo '<input type="text" name="g' . $question->id .
+                '" id="inputq' . $question->id .
+                '" size="' . ($quiz->decimalpoints + 2) .
+                '" value="' . (0 + $quiz->grades[$qnum]) .
+                '" tabindex="' . ($lastindex + $qno) . '" />';
+                echo '&nbsp &nbsp';
         
-    </select>
-    <?php echo '&nbsp &nbsp ';
-    echo '<input type="text" name="g' . $question->id .
-            '" id="inputq' . $question->id .
-            '" size="' . ($quiz->decimalpoints + 2) .
-            '" value="' . (0 + $quiz->grades[$qnum]) .
-            '" tabindex="' . ($lastindex + $qno) . '" />';
-    
-    ?>
-    
-    </fieldset>
-                    <?php
-                    if ($question->qtype == 'random') {
-                        echo '<a href="' . $questionurl->out() .
-                                '" class="configurerandomquestion">' .
-                                get_string("configurerandomquestion", "quiz") . '</a>';
-                    }
+        $maxnattempts = 10;
+        // Question attempts
+        echo '<select name="na'.$qnum.'" tabindex="'.($lastindex+$qno).'">';
+        for ($i = 1; $i < $maxnattempts; $i++) {
+        	$selectedvalue = '';
+        	if ($i == $quiz->nattempts[$qnum]) {
+        		$selectedvalue = 'selected="selected"';
+        	}
+        	echo '<option value="'.$i.'" '.$selectedvalue.'>'.$i.'</option>';
+        }
+        echo '</select>';
+        ?>
+        
+        <?php echo '&nbsp &nbsp ';
+        echo '<input type="text" name="p' . $question->id .
+                '" size="' . ($quiz->decimalpoints + 2) .
+                '" value="' . (0 + $quiz->penalties[$qnum]) .
+                '" tabindex="' . ($lastindex + $qno) . '" />';
 
-                    ?>
+        ?>
+
+        </fieldset>
+                        <?php
+                        if ($question->qtype == 'random') {
+                            echo '<a href="' . $questionurl->out() .
+                                    '" class="configurerandomquestion">' .
+                                    get_string("configurerandomquestion", "quiz") . '</a>';
+                        }
+
+                        ?>
+    </div>
 </div>
-</form>
-
-            </div>
+    
                     <?php
                 } else if ($reordertool) {
                     if ($qnum) {
@@ -714,8 +721,8 @@ function extendedquiz_print_question_list($quiz, $pageurl, $allowdelete, $reorde
                             (10*$count + 10) . '" />';
                 }
                 echo "</div></div>";
-
-                if (!$reordertool && !$quiz->shufflequestions) {
+                
+                /*if (!$reordertool && !$quiz->shufflequestions) {
                     echo $OUTPUT->container_start('addpage');
                     $url = new moodle_url($pageurl->out_omit_querystring(),
                             array('cmid' => $quiz->cmid, 'courseid' => $quiz->course,
@@ -725,7 +732,7 @@ function extendedquiz_print_question_list($quiz, $pageurl, $allowdelete, $reorde
                             'actions' => array(new component_action('click',
                                     'M.core_scroll_manager.save_scroll_action'))));
                     echo $OUTPUT->container_end();
-                }
+                }*/
                 $pageopen = false;
                 $count++;
             }
@@ -733,9 +740,10 @@ function extendedquiz_print_question_list($quiz, $pageurl, $allowdelete, $reorde
 
     }
     if ($reordertool) {
-        echo $reordercontrolsbottom;
-        echo '</div></form>';
+        echo $reordercontrolsbottom;  
     }
+    
+    
 }
 
 /**
@@ -1355,7 +1363,7 @@ function extendedquiz_print_status_bar($quiz) {
     if (empty($dates)) {
         $dates[] = get_string('alwaysavailable', 'quiz');
     }
-    $tooltip = implode(', ', $dates);;
+    $tooltip = implode(', ', $dates);
 
     // Brief summary on the page.
     if ($timenow < $quiz->timeopen) {

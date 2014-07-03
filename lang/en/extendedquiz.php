@@ -45,6 +45,7 @@ $string['nonumeric'] = '    You must enter a number here';
 $string['pluginadministration'] = 'Extendedquiz administration';
 $string['pluginname'] = 'Extendedquiz';
 $string['refreshvarsvalues'] = 'Refresh vars values';
+$string['savechanges'] = 'Save changes';
 $string['valueincrement'] = 'Increment';
 $string['var'] = 'Variable';
 $string['varsvalues'] = 'Variables values';

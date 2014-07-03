@@ -310,22 +310,32 @@ function extendedquiz_get_all_question_grades($quiz) {
         $wheresql = " AND question $usql ";
         $params = array_merge($params, $question_params);
     }
-
-    $instances = $DB->get_records_sql("SELECT question, grade, id
-                                    FROM {extendedquiz_q_instances}
-                                    WHERE quiz = ? $wheresql", $params);
+    
+    // guidedquiz mod
+    $instances = $DB->get_records_sql("SELECT question, grade, id, penalty, nattempts 
+                            FROM {$CFG->prefix}extendedquiz_q_instances
+                            WHERE quiz = '$quiz->id'" .
+                            (is_null($questionlist) ? '' :
+                            "AND question IN ($questionlist)"));
 
     $list = explode(",", $questionlist);
-    $grades = array();
-
+    
+    $obj->grades = array();
+    $obj->penalties = array();
+    $obj->nattempts = array();
     foreach ($list as $qid) {
         if (isset($instances[$qid])) {
-            $grades[$qid] = $instances[$qid]->grade;
+            $obj->grades[$qid] = $instances[$qid]->grade;
+            $obj->penalties[$qid] = $instances[$qid]->penalty;
+            $obj->nattempts[$qid] = $instances[$qid]->nattempts;
         } else {
-            $grades[$qid] = 1;
+            $obj->grades[$qid] = 1;
+            $obj->penalties[$qid] = 0;
+            $obj->nattempts[$qid] = 1;
         }
     }
-    return $grades;
+    return $obj;
+    // guidedquiz mod end
 }
 
 /**
