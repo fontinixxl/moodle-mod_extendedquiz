@@ -722,7 +722,7 @@ function extendedquiz_print_question_list($quiz, $pageurl, $allowdelete, $reorde
                 }
                 echo "</div></div>";
                 
-                /*if (!$reordertool && !$quiz->shufflequestions) {
+                if (!$reordertool && !$quiz->shufflequestions) {
                     echo $OUTPUT->container_start('addpage');
                     $url = new moodle_url($pageurl->out_omit_querystring(),
                             array('cmid' => $quiz->cmid, 'courseid' => $quiz->course,
@@ -732,7 +732,7 @@ function extendedquiz_print_question_list($quiz, $pageurl, $allowdelete, $reorde
                             'actions' => array(new component_action('click',
                                     'M.core_scroll_manager.save_scroll_action'))));
                     echo $OUTPUT->container_end();
-                }*/
+                }
                 $pageopen = false;
                 $count++;
             }
