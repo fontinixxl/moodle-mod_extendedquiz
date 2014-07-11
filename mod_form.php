@@ -210,7 +210,6 @@ class mod_extendedquiz_mod_form extends moodleform_mod {
         $mform->addElement('hidden','shufflequestions','0');
         
         // Questions per page. guided quiz module 
-        /*
         $pageoptions = array();
         $pageoptions[0] = get_string('neverallononepage', 'quiz');
         $pageoptions[1] = get_string('everyquestion', 'quiz');
@@ -245,7 +244,7 @@ class mod_extendedquiz_mod_form extends moodleform_mod {
                 get_string('newpage', 'quiz'), null, false);
         $mform->addHelpButton('questionsperpagegrp', 'newpage', 'quiz');
         $mform->setAdvanced('questionsperpagegrp', $quizconfig->questionsperpage_adv);
-        */
+        
         
         $mform->addElement('hidden','questionsperpage', 1);
         
