@@ -1141,7 +1141,7 @@ function extendedquiz_after_add_or_update($quiz) {
  */
 function extendedquiz_store_vars($quizid){
     global $DB;
-    foreach ($_POST as $varname => $value) {        //?¿?¿ falta validar 
+    foreach ($_POST as $varname => $value) {        
         if (substr($varname, 0, 4) == 'var_') {
             $vardata = explode('_', $varname);      //varsdata = 0->vars 1->nvalues 2->vars
             $vars[$vardata[2]]->{$vardata[1]} = clean_param($value, PARAM_NUMBER);   // integer or float: vars[vars]->nvalues 
@@ -1150,7 +1150,7 @@ function extendedquiz_store_vars($quizid){
         // Storing to insert/update after the vars insertion
         if (substr($varname, 0, 10) == 'concatvar_') {
         	$concatvars[$varname]->name = $varname;
-        	$concatvars[$varname]->vars = programmedresp_serialize(optional_param($varname, false, PARAM_ALPHANUM));
+        	$concatvars[$varname]->vars = programmedresp_serialize(optional_param($varname, false, PARAM_ALPHANUMEXT));
         }
     }
     

@@ -190,24 +190,19 @@ class mod_extendedquiz_mod_form extends moodleform_mod {
         $mform->setDefault('grademethod', $quizconfig->grademethod);
         $mform->disabledIf('grademethod', 'attempts', 'eq', 1);
 
-        // -------------------------------------------------------------------------------
-        
+        // ------------------------------------------------------------------------------- 
         $mform->addElement('header', 'layouthdr', get_string('layout', 'quiz'));
-        //Extendedquiz mod
         
         // Shuffle questions.
-        /*
         $shuffleoptions = array(
             0 => get_string('asshownoneditscreen', 'quiz'),
-            1 => get_string('shuffledrandomly', 'quiz')         //volem que les preguntes vagin en ordre
+            1 => get_string('shuffledrandomly', 'quiz')
         );
         $mform->addElement('select', 'shufflequestions', get_string('questionorder', 'quiz'),
                 $shuffleoptions, array('id' => 'id_shufflequestions'));
-        $mform->setAdvan get_string('questionorder', 'quiz'),
-             ced('shufflequestions', $quizconfig->shufflequestions_adv);
+        $mform->setAdvanced('shufflequestions', $quizconfig->shufflequestions_adv);
         $mform->setDefault('shufflequestions', $quizconfig->shufflequestions);
-        */
-        $mform->addElement('hidden','shufflequestions','0');
+        
         
         // Questions per page. guided quiz module 
         $pageoptions = array();
@@ -231,7 +226,7 @@ class mod_extendedquiz_mod_form extends moodleform_mod {
 
             $PAGE->requires->js('/question/qengine.js');
             $module = array(
-                'name'      => 'mod_quiz_edit',         //?¿?¿?¿?
+                'name'      => 'mod_quiz_edit',         
                 'fullpath'  => '/mod/extendedquiz/edit.js',
                 'requires'  => array('yui2-dom', 'yui2-event', 'yui2-container'),
                 'strings'   => array(),
@@ -275,12 +270,16 @@ class mod_extendedquiz_mod_form extends moodleform_mod {
             $currentbehaviour = '';
         }
          
-        $behaviours = question_engine::get_behaviour_options($currentbehaviour);
+        $behaviours = question_engine::get_behaviour_options($currentbehaviour);  
+        //Extquiz mode
+        $extquizbehaviour['extquiz'] = $behaviours['extquiz'];
         $mform->addElement('select', 'preferredbehaviour',
-                get_string('howquestionsbehave', 'question'), $behaviours);
+                get_string('howquestionsbehave', 'question'), $extquizbehaviour);
+        //die();
         $mform->addHelpButton('preferredbehaviour', 'howquestionsbehave', 'question');
-        $mform->setDefault('preferredbehaviour', $quizconfig->preferredbehaviour);
-        
+        $mform->setDefault('preferredbehaviour', 'extquiz');
+        //Extquiz mode end 
+         
         // Each attempt builds on last.
         $mform->addElement('selectyesno', 'attemptonlast',
                 get_string('eachattemptbuildsonthelast', 'quiz'));
