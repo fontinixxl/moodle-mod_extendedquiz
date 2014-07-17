@@ -44,13 +44,13 @@ class mod_extendedquiz_mod_form extends moodleform_mod {
 
     public function __construct($current, $section, $cm, $course) {
         self::$reviewfields = array(
-            'attempt'          => array('theattempt', 'quiz'),        //?¿?¿
+            'attempt'          => array('theattempt', 'quiz'),        
             'correctness'      => array('whethercorrect', 'question'),
-            'marks'            => array('marks', 'quiz'),             //?¿¿?
+            'marks'            => array('marks', 'quiz'),             
             'specificfeedback' => array('specificfeedback', 'question'),
             'generalfeedback'  => array('generalfeedback', 'question'),
             'rightanswer'      => array('rightanswer', 'question'),
-            'overallfeedback'  => array('reviewoverallfeedback', 'quiz'), //?¿?¿
+            'overallfeedback'  => array('reviewoverallfeedback', 'quiz'), 
         );
         parent::__construct($current, $section, $cm, $course);
     }
@@ -79,6 +79,7 @@ class mod_extendedquiz_mod_form extends moodleform_mod {
         $mform->addHelpButton('name', 'extendedquizname', 'extendedquiz');
 
         // Adding the standard "intro" and "introformat" fields
+        $this->_features->showdescription = false;
         $this->add_intro_editor();
         
 //-------------------------------------Extended quiz--------------------------------------------------
@@ -99,9 +100,10 @@ class mod_extendedquiz_mod_form extends moodleform_mod {
         	$PAGE->requires->js('/mod/extendedquiz/onload.js');
         }
         
-        /* Guided quiz own settings
+        //Extended quiz own settings
         $mform->addElement('selectyesno', 'viewpreviousquestions', get_string('viewpreviousquestions', 'extendedquiz'));
         $mform->setDefault('viewpreviousquestions', true);
+        /*
         $mform->addElement('selectyesno', 'showcorrectresponses', get_string('showcorrectresponses', 'extendedquiz'));
         $mform->setDefault('showcorrectresponses', true);
         */

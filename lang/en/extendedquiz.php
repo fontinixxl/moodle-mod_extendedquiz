@@ -51,7 +51,7 @@ $string['var'] = 'Variable';
 $string['varsvalues'] = 'Variables values';
 $string['vartypevar'] = 'variable';
 $string['vartypeconcatvar'] = 'concat variable';
-$string['viewpreviousquestions'] = 'View previous questions';
+$string['viewpreviousquestions'] = 'View previous answered questions';
 $string['showcorrectresponses'] = "Show correct responses";
 
 //capabilities

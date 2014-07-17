@@ -44,7 +44,8 @@
                 <FIELD NAME="delay1" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="Delay that must be left between the first and second attempt, in seconds." PREVIOUS="browsersecurity" NEXT="delay2"/>
                 <FIELD NAME="delay2" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="Delay that must be left between the second and subsequent attempt, in seconds." PREVIOUS="delay1" NEXT="showuserpicture"/>
                 <FIELD NAME="showuserpicture" TYPE="int" LENGTH="4" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="Option to show the user's picture during the attempt and on the review page." PREVIOUS="delay2" NEXT="showblocks"/>
-                <FIELD NAME="showblocks" TYPE="int" LENGTH="4" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="Whether blocks should be shown on the attempt.php and review.php pages." PREVIOUS="showuserpicture"/>
+                <FIELD NAME="showblocks" TYPE="int" LENGTH="4" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="Whether blocks should be shown on the attempt.php and review.php pages." PREVIOUS="showuserpicture" NEXT="viewpreviousquestions"/>
+                <FIELD NAME="viewpreviousquestions" TYPE="int" LENGTH="1" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" ENUM="false" PREVIOUS="showblocks"/>
             </FIELDS>
             <KEYS>
                 <KEY NAME="primary" TYPE="primary" FIELDS="id"/>

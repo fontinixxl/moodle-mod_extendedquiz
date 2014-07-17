@@ -91,8 +91,10 @@ add_to_log($attemptobj->get_courseid(), 'extendedquiz', 'continue attempt',
         'review.php?attempt=' . $attemptobj->get_attemptid(),
         $attemptobj->get_quizid(), $attemptobj->get_cmid());
 
-// Get the list of questions needed by this page.
-$slots = $attemptobj->get_slots($page);
+// Get the list of questions (id's) needed by this page.
+$slots = $attemptobj->get_slots();
+//debugging("slot of this page: ".print_r($slots));
+//debugging("all slots: ".print_r($attemptobj->get_slots()));
 
 // Check.
 if (empty($slots)) {
@@ -113,7 +115,7 @@ $headtags = $attemptobj->get_html_head_contributions($page);
 $PAGE->requires->js_init_call('M.mod_extendedquiz.init_attempt_form', null, false, extendedquiz_get_js_module());
 
 // Arrange for the navigation to be displayed in the first region on the page.
-$navbc = $attemptobj->get_navigation_panel($output, 'extendedquiz_attempt_nav_panel', $page);
+$navbc = $attemptobj->get_navigation_panel($output, 'extendedquiz_attempt_nav_panel', $page, true);
 $regions = $PAGE->blocks->get_regions();
 $PAGE->blocks->add_fake_block($navbc, reset($regions));
 
@@ -130,4 +132,9 @@ if ($attemptobj->is_last_page($page)) {
 //Extendedquiz mod 
 $attemptobj->assign_random_values();
 //Extendedquiz mod end
+//aixo ho haure de fer dins d attempt_page del render
+
+//debugging('Attempt_page output method : page='.$page.'slots'.print_r($slots).' id='.$id.' nextpage = '.$nextpage);
+//echo $output->review_page($attemptobj, $slots, $page, $showall, $lastpage, $options, $summarydata, $attemptobj->get_questiontext());
+
 echo $output->attempt_page($attemptobj, $page, $accessmanager, $messages, $slots, $id, $nextpage, $attemptobj->get_questiontext());
