@@ -1151,6 +1151,7 @@ function extendedquiz_store_vars($quizid){
         if (substr($varname, 0, 10) == 'concatvar_') {
         	$concatvars[$varname]->name = $varname;
         	$concatvars[$varname]->vars = programmedresp_serialize(optional_param($varname, false, PARAM_ALPHANUMEXT));
+                $concatvars[$varname]->readablename = optional_param('n'.$varname, $varname, PARAM_ALPHANUM);
         }
     }
     
@@ -1196,6 +1197,7 @@ function extendedquiz_store_vars($quizid){
                 
         	// Update
         	if ($dbobj = $DB->get_record('qtype_programmedresp_conc', array('origin'=>'quiz','instanceid'=>$quizid, 'name'=>$obj->name))) {
+                    $dbobj->readablename = $obj->readablename;
                     $dbobj->vars = $obj->vars;
                     $result = $DB->update_record('qtype_programmedresp_conc', $dbobj);
         		
@@ -1631,6 +1633,7 @@ function extendedquiz_supports($feature) {
         case FEATURE_BACKUP_MOODLE2:            return true;
         case FEATURE_SHOW_DESCRIPTION:          return true;
         case FEATURE_CONTROLS_GRADE_VISIBILITY: return true;
+        case FEATURE_USES_QUESTIONS:            return true;
 
         default: return null;
     }

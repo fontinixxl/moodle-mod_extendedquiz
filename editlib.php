@@ -622,8 +622,8 @@ function extendedquiz_print_question_list($quiz, $pageurl, $allowdelete, $reorde
                     ?>
 <div class="points">
     <div class="guided">
-        <fieldset class="invisiblefieldset" style="display: block;">
-        <label for="<?php echo "inputq$question->id" ?>"><?php echo "Grade  Attempts  Penalty"; ?></label><br />
+        <!--<fieldset class="invisiblefieldset" style="display: block;">-->
+        <label for="<?php echo "inputq$question->id" ?>"><?php echo "Grade  Attempts  Penalty"; ?></label>
         <?php
         echo '<input type="text" name="g' . $question->id .
                 '" id="inputq' . $question->id .
@@ -653,7 +653,7 @@ function extendedquiz_print_question_list($quiz, $pageurl, $allowdelete, $reorde
 
         ?>
 
-        </fieldset>
+        <!--</fieldset>-->
                         <?php
                         if ($question->qtype == 'random') {
                             echo '<a href="' . $questionurl->out() .

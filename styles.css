@@ -78,11 +78,15 @@ body.jsenabled .questionflagcheckbox {display: none;}
 #quiz-timer.timeleft5 {background: #ff5555;}
 #quiz-timer.timeleft4 {background: #ff4444;}
 #quiz-timer.timeleft3 {background: #ff3333;}
-#quiz-timer.timeleft2 {background: #ff2222;}
+#quiz-timer.timeleft2 {background: #ff2222;}sc
 #quiz-timer.timeleft1 {background: #ff1111;}
 #quiz-timer.timeleft0 {background: #ff0000;}
 
 /** mod quiz mod **/
+#page-mod-extendedquiz-edit .quizcontents input[type=text]{
+    height:23px;
+}
+
 #page-mod-extendedquiz-mod #reviewoptionshdr .fitem {width: 23%;margin-left: 10px;}
 #page-mod-extendedquiz-mod #reviewoptionshdr fieldset.fgroup {width: 100%;text-align: left;margin-left: 0;}
 
@@ -257,8 +261,31 @@ table#categoryquestions {width: 100%;overflow: hidden;table-layout: fixed;}
 #page-mod-extendedquiz-edit div.question div.qnum {display:block;float:left;width:1.4em;padding-right:0.3em;padding-left:0;z-index:99;text-align:right;color:#333;}
 #page-mod-extendedquiz-edit div.question div.questioncontainer{background-color:#ffc;}
 #page-mod-extendedquiz-edit div.editq div.question div.content{width:87%;float:left;position:relative;-webkit-border-radius:0.6em;-webkit-border-radius-bottomleft:0;-webkit-border-radius-topleft:0;border-radius:0.6em;border-radius-bottomleft:0;border-radius-topleft:0;line-height:1.4em;padding:0.5em;}
-#page-mod-extendedquiz-edit div.question div.content div.points{top:0.5em;border-left:0.4em solid #FFF;width:initial;padding:0.2em;line-height:1em;max-width:30%;position:absolute;right:60px;-webkit-border-radius:0.2em;-webkit-border-radius-bottomleft:0;-webkit-border-radius-topleft:0;border-radius:0.2em;border-radius-bottomleft:0;border-radius-topleft:0;z-index:900;display:block;margin:0;background-color:#ddf;}
-#page-mod-extendedquiz-edit div.question div.content div.points input{width:2em;padding:0;}
+#page-mod-extendedquiz-edit div.question div.content div.points{
+    top:0em;
+    width:14.92em;
+    padding:0.1em;
+    line-height:1em;
+    min-width:30%;
+    position:static;
+    float:right;
+    right:60px;
+    -webkit-border-radius:0.2em;
+    -webkit-border-radius-bottomleft:0;
+    -webkit-border-radius-topleft:0;
+    border-radius:0.2em;
+    display:block;
+    margin:-7px 0px -0.8em;
+    //background-color:#ddf;
+}
+#page-mod-extendedquiz-edit div.question div.content div.points input{
+    width:2em;
+    padding:0;
+    height:25px;
+}
+#page-mod-extendedquiz-edit div.question div.content div.points select{
+    height:25px;
+}
 #page-mod-extendedquiz-edit div.question div.content div.points input.pointssubmitbutton{width:auto;}
 //EXTENDEDQUIZ OWN 
 #page-mod-extendedquiz-edit div.question div.content div.points div.guidedquiz{width:initial;} 

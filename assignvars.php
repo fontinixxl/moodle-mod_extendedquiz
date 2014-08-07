@@ -59,7 +59,7 @@ foreach ($extendedquizvars as $extendedquizvar) {
 // Now the concat vars
 if ($concatvars) {
 	foreach ($concatvars as $var) {
-	    $options['concatvar_'.$var->id] = $var->name.' ('.get_string('vartypeconcatvar', 'extendedquiz').')';
+	    $options['concatvar_'.$var->id] = $var->readablename.' ('.get_string('vartypeconcatvar', 'extendedquiz').')';
 	}
 }
 
