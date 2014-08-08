@@ -1,3 +1,7 @@
+#page-mod-extendedquiz-mod input:not([type=submit]):not([type=button]){
+    height:auto;
+}
+
 /** Bits that can appear on any page. */
 .path-mod-extendedquiz .statedetails {
     display: block;
@@ -84,7 +88,7 @@ body.jsenabled .questionflagcheckbox {display: none;}
 
 /** mod quiz mod **/
 #page-mod-extendedquiz-edit .quizcontents input[type=text]{
-    height:23px;
+    height:auto;
 }
 
 #page-mod-extendedquiz-mod #reviewoptionshdr .fitem {width: 23%;margin-left: 10px;}
