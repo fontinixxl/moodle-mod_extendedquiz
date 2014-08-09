@@ -284,7 +284,8 @@ function extendedquiz_save_new_layout($quiz) {
  * @param int $questionid  The id of the question
  * @param int $quizid  The id of the quiz to update / add the instances for.
  */
-function extendedquiz_update_question_instance($grade, $questionid, $quiz, $penalty = false, $nattempts = false ) {
+function extendedquiz_update_question_instance($grade, $questionid, $quiz, $penalty, $nattempts = false ) {
+    //debugging("update question instance: penalty = ".$penalty);
     global $DB;
     $instance = $DB->get_record('extendedquiz_q_instances', array('quiz' => $quiz->id,
             'question' => $questionid));
@@ -296,7 +297,8 @@ function extendedquiz_update_question_instance($grade, $questionid, $quiz, $pena
     
     $instance->grade = $grade;
     // guidedquiz mod end
-    if ($penalty) {
+    if (!is_null($penalty)) {
+        //debugging("S'actualitza la penalty");
         $instance->penalty = $penalty;
     }
     if ($nattempts) {

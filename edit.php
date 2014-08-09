@@ -307,12 +307,14 @@ if (optional_param('quizdeleteselected', false, PARAM_BOOL) &&
 
 if (optional_param('savechanges', false, PARAM_BOOL) && confirm_sesskey()) {
     //debugging("detect savechanges param");
+    
     $deletepreviews = false;
     $recomputesummarks = false;
 
     $oldquestions = explode(',', $quiz->questions); // The questions in the old order.
     $questions = array(); // For questions in the new order.
     $rawdata = (array) data_submitted();
+    //debugging(print_r($rawdata));
     $moveonpagequestions = array();
     $moveselectedonpage = optional_param('moveselectedonpagetop', 0, PARAM_INT);
     if (!$moveselectedonpage) {
@@ -323,10 +325,13 @@ if (optional_param('savechanges', false, PARAM_BOOL) && confirm_sesskey()) {
         if (preg_match('!^g([0-9]+)$!', $key, $matches)) {
             // Parse input for question -> grades.
             //debugging('MATCHES: 0-> '.$matches[0].' 1-> '.$matches[1]);
+            //debugging("key=> ".$key. " value => ".$value);
             $questionid = $matches[1];
             $quiz->grades[$questionid] = unformat_float($value);
-            //debugging(optional_param('p'.$questionid, 0, PARAM_NUMBER));
-            $quiz->penalties[$questionid] = optional_param('p'.$questionid, 0, PARAM_NUMBER);
+            //debugging("Quiz grade for question ".$questionid." is =>".$quiz->grades[$questionid]);
+            //debugging(optional_param('p'.$questionid, 0, PARAM_FLOAT));
+            $quiz->penalties[$questionid] = unformat_float(optional_param('p'.$questionid, 0, PARAM_FLOAT));
+            //debugging("PENALTY = ".$quiz->penalties[$questionid]);
             $quiz->nattempts[$questionid] = optional_param('na'.$questionid, 1, PARAM_INT);
             extendedquiz_update_question_instance($quiz->grades[$questionid], $questionid, $quiz, $quiz->penalties[$questionid], $quiz->nattempts[$questionid] );
             $deletepreviews = true;
@@ -348,6 +353,7 @@ if (optional_param('savechanges', false, PARAM_BOOL) && confirm_sesskey()) {
                 $questions[$value] = $questionid;
             }
             $deletepreviews = true;
+            
         }
     }
 
