@@ -24,6 +24,16 @@ body.jsenabled .questionflagcheckbox {display: none;}
 .generalbox#passwordbox { /* Should probably match .generalbox#intro above */width:70%;margin-left:auto;margin-right:auto;}
 #passwordform {margin: 1em 0;}
 
+.box.generalbox#globalquestiontext {
+    color: #333;
+    background-color: #f5f5f5;
+    border-color: #bce8f1;
+    padding: 8px 35px 8px 14px;
+    margin-bottom: 10px;
+    border: 1px solid #003d5c;
+    border-radius: 4px;
+}
+
 /* Question navigation block. */
 #quiznojswarning {color: red;}
 #quiznojswarning {font-size: 0.7em;line-height: 1.1;}
@@ -82,7 +92,7 @@ body.jsenabled .questionflagcheckbox {display: none;}
 #quiz-timer.timeleft5 {background: #ff5555;}
 #quiz-timer.timeleft4 {background: #ff4444;}
 #quiz-timer.timeleft3 {background: #ff3333;}
-#quiz-timer.timeleft2 {background: #ff2222;}sc
+#quiz-timer.timeleft2 {background: #ff2222;}
 #quiz-timer.timeleft1 {background: #ff1111;}
 #quiz-timer.timeleft0 {background: #ff0000;}
 
@@ -360,9 +370,9 @@ body.jsenabled #quizcontentsblock .repaginatecommand #repaginatecommand {display
 #page-mod-extendedquiz-edit #qtypechoicecontainer {display: none;}
 
 #page-mod-extendedquiz-edit .questionbankwindow select#catmenu_jump{
-/* In Opera9, IE6 the width of the
-select obeys the width of its content
-by default. This prevents that. */width:100%;}
+    /* In Opera9, IE6 the width of the
+    select obeys the width of its content
+    by default. This prevents that. */width:100%;}
 
 /*this color might need to be theme-specific,
 but in terms of usability, as testing showed,
