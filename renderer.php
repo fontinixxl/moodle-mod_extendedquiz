@@ -844,7 +844,7 @@ class mod_extendedquiz_renderer extends plugin_renderer_base {
     }
 
     /**
-     * IEP IEP IEP IEP IEP IEP  -->         ??¿?¿?¿?¿?¿?¿?¿?¿?¿?¿?¿?¿ I need it for print quiz intro in any question atempt ?¿?¿?¿?¿?¿?¿?¿?¿?¿
+     * 
      * Output the quiz intro.
      * @param object $quiz the quiz settings.
      * @param object $cm the course_module object.
@@ -859,7 +859,8 @@ class mod_extendedquiz_renderer extends plugin_renderer_base {
     }
 
     public function quiz_intro_vars($introrandomvars) {
-        return $this->box($introrandomvars);
+        return $this->box($introrandomvars, 'generalbox', 'globalquestiontext');
+        
     }
 
     /**

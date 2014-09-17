@@ -284,7 +284,8 @@ function extendedquiz_save_new_layout($quiz) {
  * @param int $questionid  The id of the question
  * @param int $quizid  The id of the quiz to update / add the instances for.
  */
-function extendedquiz_update_question_instance($grade, $questionid, $quiz, $penalty = false, $nattempts = false ) {
+function extendedquiz_update_question_instance($grade, $questionid, $quiz, $penalty, $nattempts = false ) {
+    //debugging("update question instance: penalty = ".$penalty);
     global $DB;
     $instance = $DB->get_record('extendedquiz_q_instances', array('quiz' => $quiz->id,
             'question' => $questionid));
@@ -296,7 +297,8 @@ function extendedquiz_update_question_instance($grade, $questionid, $quiz, $pena
     
     $instance->grade = $grade;
     // guidedquiz mod end
-    if ($penalty) {
+    if (!is_null($penalty)) {
+        //debugging("S'actualitza la penalty");
         $instance->penalty = $penalty;
     }
     if ($nattempts) {
@@ -622,8 +624,8 @@ function extendedquiz_print_question_list($quiz, $pageurl, $allowdelete, $reorde
                     ?>
 <div class="points">
     <div class="guided">
-        <fieldset class="invisiblefieldset" style="display: block;">
-        <label for="<?php echo "inputq$question->id" ?>"><?php echo "Grade  Attempts  Penalty"; ?></label><br />
+        <!--<fieldset class="invisiblefieldset" style="display: block;">-->
+        <label for="<?php echo "inputq$question->id" ?>"><?php echo "Grade  Attempts  Penalty"; ?></label>
         <?php
         echo '<input type="text" name="g' . $question->id .
                 '" id="inputq' . $question->id .
@@ -653,7 +655,7 @@ function extendedquiz_print_question_list($quiz, $pageurl, $allowdelete, $reorde
 
         ?>
 
-        </fieldset>
+        <!--</fieldset>-->
                         <?php
                         if ($question->qtype == 'random') {
                             echo '<a href="' . $questionurl->out() .

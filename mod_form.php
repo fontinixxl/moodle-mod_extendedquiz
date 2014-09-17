@@ -653,7 +653,7 @@ class mod_extendedquiz_mod_form extends moodleform_mod {
         return $errors;
     }
     
-    // guidedquiz mod
+    // ExtendedQuiz mod
     function set_data($default_values) {
         global $DB;
     	if (!empty($this->_instance)) {
